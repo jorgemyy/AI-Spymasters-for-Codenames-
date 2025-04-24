@@ -680,7 +680,7 @@ def test_modes(reps, board_size, word_list, death_word_present = False, spy_mode
 word_list = ["bird","dog","soup","beans","king","queen","music","capital","monument","baseball","frog","door","instrument","law","salad","sun","president","city","town","computer","sandwich","book","pencil","ball","college"]
 
 # 389 nouns extracted from https://github.com/Gullesnuffs/Codenames/blob/master/wordlist-eng.txt
-with open('csci 3022/project/codenames_words.txt', 'r') as file:
+with open('codenames_words.txt', 'r') as file:
     codenames_word_list = [line.strip().lower() for line in file.readlines()]
 
 

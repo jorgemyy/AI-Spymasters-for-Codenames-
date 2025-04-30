@@ -167,7 +167,7 @@ class codenames():
         running = True
 
         clue_type = self.mode[self.current_player - 1]
-        clue = self.get_random_clue(random.randint(1,3)) if clue_type == "r" else self.get_educated_clue()[1]
+        clue = self.get_random_clue(random.randint(1,3)) if clue_type == "r" else self.get_educated_clue(self.current_player)[1]
 
         while running:
 
@@ -218,7 +218,7 @@ class codenames():
 
                             # get new clue
                             clue_type = self.mode[self.current_player - 1]
-                            clue = self.get_random_clue(random.randint(1,3)) if clue_type == "r" else self.get_educated_clue()[1]
+                            clue = self.get_random_clue(random.randint(1,3)) if clue_type == "r" else self.get_educated_clue(self.current_player)[1]
 
                             screen.fill(black)
                             input_string = ""
@@ -329,10 +329,11 @@ class codenames():
 
 
     # minimax function to get educated clue using alpha beta 
-    def get_educated_clue(self, depth = 0, is_max = True, alpha = float('-inf'), beta = float('inf')):
+    def get_educated_clue(self, max_player, depth = 0, is_max = True, alpha = float('-inf'), beta = float('inf')):
         # look a few plies down, or until the game is over
         if depth == self.plies * 2 or self.winning_eval():
-            return self.p1_score - self.p2_score, None
+            score = self.p1_score - self.p2_score if max_player == 1 else self.p2_score - self.p1_score
+            return score, None
 
         if is_max:
             best_val = float('-inf')
@@ -340,7 +341,7 @@ class codenames():
             # loop through clue combinations
             for clue in self.get_clue_combos():
                 new_state = self.next_state(clue) # create clone to manipulate future states
-                value, _ = new_state.get_educated_clue(depth + 1, False, alpha, beta)
+                value, _ = new_state.get_educated_clue(max_player, depth + 1, False, alpha, beta)
 
                 if value > best_val:
                     best_val = value
@@ -358,7 +359,7 @@ class codenames():
             best_clue = None
             for clue in self.get_clue_combos():
                 new_state = self.next_state(clue)
-                value, _ = new_state.get_educated_clue(depth + 1, True, alpha, beta)
+                value, _ = new_state.get_educated_clue(max_player, depth + 1, True, alpha, beta)
 
                 if value < best_val:
                     best_val = value
@@ -554,7 +555,7 @@ class codenames():
                 break
 
             clue_type = self.mode[self.current_player - 1]
-            clue = self.get_random_clue(random.randint(1,3)) if clue_type == "r" else self.get_educated_clue()[1]
+            clue = self.get_random_clue(random.randint(1,3)) if clue_type == "r" else self.get_educated_clue(self.current_player)[1]
             
             # get guesses using different model
 
